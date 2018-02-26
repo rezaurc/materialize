@@ -1,5 +1,5 @@
 /*!
- * Materialize v1.0.0-alpha.4 (http://materializecss.com)
+ * Materialize v1.0.0-alpha.40 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -4904,6 +4904,7 @@ small {
 
 .card .card-action {
   position: relative;
+  background-color: #fff;
   border-top: 1px solid rgba(160, 160, 160, 0.2);
   padding: 16px 24px;
 }
@@ -6087,6 +6088,9 @@ label {
   color: #d1d1d1;
 }
 :-ms-input-placeholder {
+  color: #d1d1d1;
+}
+::-ms-input-placeholder {
   color: #d1d1d1;
 }
 ::placeholder {

@@ -1,5 +1,5 @@
 /*!
- * Materialize v1.0.0-alpha.4 (http://materializecss.com)
+ * Materialize v1.0.0-alpha.40 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -2681,6 +2681,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     onOpenEnd: null,
     onCloseStart: null,
     onCloseEnd: null,
+    preventScrolling: true,
     dismissible: true,
     startingTop: '4%',
     endingTop: '10%'
@@ -2984,7 +2985,10 @@ $jscomp.polyfill = function (e, r, p, m) {
           this.options.onOpenStart.call(this, this.el, this._openingTrigger);
         }
 
-        document.body.style.overflow = 'hidden';
+        if (this.options.preventScrolling) {
+          document.body.style.overflow = 'hidden';
+        }
+
         this.el.classList.add('open');
         this.el.insertAdjacentElement('afterend', this.$overlay[0]);
 
@@ -5206,7 +5210,8 @@ $jscomp.polyfill = function (e, r, p, m) {
     onOpenStart: null,
     onOpenEnd: null,
     onCloseStart: null,
-    onCloseEnd: null
+    onCloseEnd: null,
+    preventScrolling: true
   };
 
   /**
@@ -5261,6 +5266,10 @@ $jscomp.polyfill = function (e, r, p, m) {
        * @type {Boolean}
        */
       _this29.isDragged = false;
+
+      // Window size variables for window resize checks
+      _this29.lastWindowWidth = window.innerWidth;
+      _this29.lastWindowHeight = window.innerHeight;
 
       _this29._createOverlay();
       _this29._createDragTarget();
@@ -5562,11 +5571,17 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_handleWindowResize",
       value: function _handleWindowResize() {
-        if (window.innerWidth > 992) {
-          this.open();
-        } else {
-          this.close();
+        // Only handle horizontal resizes
+        if (this.lastWindowWidth !== window.innerWidth) {
+          if (window.innerWidth > 992) {
+            this.open();
+          } else {
+            this.close();
+          }
         }
+
+        this.lastWindowWidth = window.innerWidth;
+        this.lastWindowHeight = window.innerHeight;
       }
     }, {
       key: "_setupClasses",
@@ -5642,7 +5657,9 @@ $jscomp.polyfill = function (e, r, p, m) {
 
           // Handle non-fixed Sidenav
         } else {
-          this._preventBodyScrolling();
+          if (this.options.preventScrolling) {
+            this._preventBodyScrolling();
+          }
 
           if (!this.isDragged || this.percentOpen != 1) {
             this._animateIn();
